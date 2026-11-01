@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuperBot v4.1.0 — AI-Powered Trading Bot | Crypto 24/7</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #0a0e17;
+            --bg-secondary: #121827;
+            --bg-card: #1a233a;
+            --bg-card-hover: #2a3859;
+            --accent-cyan: #00d2ff;
+            --accent-green: #00e676;
+            --accent-red: #ff1744;
+            --accent-orange: #ff9100;
+            --text-primary: #ffffff;
+            --text-secondary: #8b9bb4;
+            --text-muted: #5a6b85;
+            --gradient-primary: linear-gradient(135deg, #00d2ff 0%, #00e676 100%);
+            --shadow-glow: 0 0 40px rgba(0, 210, 255, 0.3);
+            --shadow-card: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(0, 210, 255, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(0, 230, 118, 0.08) 0%, transparent 50%);
+            z-index: -1; animation: bgPulse 15s ease-in-out infinite;
+        }
+        @keyframes bgPulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--accent-cyan); border-radius: 4px; }
+
+        /* Navigation */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            background: rgba(10, 14, 23, 0.85); backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 210, 255, 0.1); padding: 1rem 2rem;
+        }
+        .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.75rem; font-weight: 800; font-size: 1.5rem; color: var(--text-primary); text-decoration: none; }
+        .logo-icon { width: 40px; height: 40px; background: var(--gradient-primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: var(--shadow-glow); }
+        .logo span { background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        
+        .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
+        .nav-links a:hover { color: var(--accent-cyan); }
+
+        .btn {
+            padding: 0.75rem 1.75rem; border-radius: 8px; font-weight: 600; text-decoration: none;
+            transition: all 0.3s ease; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem;
+        }
+        .btn-primary { background: var(--gradient-primary); color: var(--bg-primary); box-shadow: var(--shadow-glow); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 60px rgba(0, 210, 255, 0.5); }
+        .btn-secondary { background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--bg-card-hover); }
+        .btn-secondary:hover { background: var(--bg-card-hover); border-color: var(--accent-cyan); }
+        .btn-large { padding: 1rem 2.5rem; font-size: 1.1rem; }
+
+        /* Hero Section */
+        .hero { min-height: 100vh; display: flex; align-items: center; padding: 8rem 2rem 4rem; }
+        .hero-container { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(0, 230, 118, 0.1); border: 1px solid rgba(0, 230, 118, 0.3); padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.85rem; color: var(--accent-green); margin-bottom: 1.5rem; }
+        .hero h1 { font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem; }
+        .hero h1 .highlight { background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero-subtitle { font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 2rem; max-width: 600px; }
+        
+        .hero-stats { display: flex; gap: 2rem; margin-bottom: 2.5rem; }
+        .hero-stat-value { font-size: 2rem; font-weight: 800; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-family: 'JetBrains Mono', monospace; }
+        .hero-stat-label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+
+        .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+        
+        .dashboard-preview {
+            background: var(--bg-secondary); border: 1px solid var(--bg-card-hover); border-radius: 16px;
+            padding: 1.5rem; box-shadow: 0 10px 40px rgba(0,0,0,0.5); position: relative; overflow: hidden;
+        }
+        .dashboard-dots { position: absolute; top: 12px; left: 1rem; display: flex; gap: 6px; }
+        .dashboard-dots span { width: 12px; height: 12px; border-radius: 50%; }
+        .dashboard-dots span:nth-child(1) { background: var(--accent-red); }
+        .dashboard-dots span:nth-child(2) { background: var(--accent-orange); }
+        .dashboard-dots span:nth-child(3) { background: var(--accent-green); }
+        
+        .dashboard-content { margin-top: 2rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+        .dash-card { background: var(--bg-card); border: 1px solid var(--bg-card-hover); border-radius: 8px; padding: 1rem; transition: all 0.3s ease; }
+        .dash-card:hover { border-color: var(--accent-cyan); transform: translateY(-2px); }
+        .dash-card-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; }
+        .dash-card-value { font-size: 1.25rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+        .dash-card-value.green { color: var(--accent-green); }
+        .dash-card-value.cyan { color: var(--accent-cyan); }
+        .dash-card-value.orange { color: var(--accent-orange); }
+
+        .floating-badge {
+            position: absolute; background: var(--bg-card); border: 1px solid var(--accent-green);
+            border-radius: 12px; padding: 0.75rem 1rem; font-size: 0.85rem; font-weight: 600;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5); animation: float 3s ease-in-out infinite;
+        }
+        .floating-badge.top-right { top: -20px; right: -20px; color: var(--accent-green); }
+        .floating-badge.bottom-left { bottom: -20px; left: -20px; color: var(--accent-cyan); animation-delay: 1.5s; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        /* Sections */
+        section { padding: 6rem 2rem; }
+        .section-container { max-width: 1400px; margin: 0 auto; }
+        .section-header { text-align: center; margin-bottom: 4rem; }
+        .section-tag { display: inline-block; background: rgba(0, 210, 255, 0.1); border: 1px solid rgba(0, 210, 255, 0.3); color: var(--accent-cyan); padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; }
+        .section-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; margin-bottom: 1rem; }
+        .section-subtitle { font-size: 1.1rem; color: var(--text-secondary); max-width: 700px; margin: 0 auto; }
+
+        /* Features Grid */
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .feature-card { background: var(--bg-card); border: 1px solid var(--bg-card-hover); border-radius: 16px; padding: 2rem; transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .feature-card:hover { transform: translateY(-5px); border-color: var(--accent-cyan); box-shadow: var(--shadow-glow); }
+        .feature-icon { width: 60px; height: 60px; background: rgba(0, 210, 255, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--accent-cyan); margin-bottom: 1.5rem; }
+        .feature-card h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem; }
+        .feature-card p { color: var(--text-secondary); font-size: 0.95rem; }
+
+        /* Strategies */
+        .strategies-section { background: var(--bg-secondary); }
+        .strategies-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+        .strategy-item { background: var(--bg-card); border: 1px solid var(--bg-card-hover); border-radius: 12px; padding: 1.25rem; display: flex; align-items: center; gap: 1rem; transition: all 0.3s ease; }
+        .strategy-item:hover { border-color: var(--accent-cyan); transform: translateX(5px); }
+        .strategy-icon { width: 40px; height: 40px; background: rgba(0, 230, 118, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--accent-green); font-size: 1rem; flex-shrink: 0; }
+        .strategy-name { font-weight: 600; font-size: 0.95rem; }
+        .strategy-category { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Pricing */
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+        .pricing-card { background: var(--bg-card); border: 1px solid var(--bg-card-hover); border-radius: 20px; padding: 2.5rem; position: relative; transition: all 0.3s ease; }
+        .pricing-card.featured { border-color: var(--accent-cyan); transform: scale(1.05); box-shadow: var(--shadow-glow); }
+        .pricing-card.featured::before { content: 'MOST POPULAR'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--gradient-primary); color: var(--bg-primary); padding: 0.4rem 1.5rem; border-radius: 50px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; }
+        .pricing-card:hover { transform: translateY(-5px); border-color: var(--accent-cyan); }
+        .pricing-card.featured:hover { transform: scale(1.05) translateY(-5px); }
+        
+        .pricing-price { display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 2rem; }
+        .pricing-amount { font-size: 3.5rem; font-weight: 900; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-family: 'JetBrains Mono', monospace; }
+        .pricing-period { color: var(--text-muted); font-size: 0.9rem; }
+        
+        .pricing-features { list-style: none; margin-bottom: 2rem; }
+        .pricing-features li { padding: 0.75rem 0; border-bottom: 1px solid var(--bg-card-hover); display: flex; align-items: center; gap: 0.75rem; font-size: 0.95rem; }
+        .pricing-features i { color: var(--accent-green); }
+        .pricing-btn { width: 100%; justify-content: center; }
+
+        /* Testimonials */
+        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .testimonial-card { background: var(--bg-card); border: 1px solid var(--bg-card-hover); border-radius: 16px; padding: 2rem; transition: all 0.3s ease; }
+        .testimonial-card:hover { border-color: var(--accent-cyan); transform: translateY(-5px); }
+        .testimonial-stars { color: var(--accent-orange); margin-bottom: 1rem; }
+        .testimonial-text { color: var(--text-secondary); font-style: italic; margin-bottom: 1.5rem; line-height: 1.7; }
+        .testimonial-author { display: flex; align-items: center; gap: 1rem; }
+        .testimonial-avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.2rem; color: var(--bg-primary); }
+        .testimonial-name { font-weight: 600; }
+        .testimonial-role { font-size: 0.85rem; color: var(--text-muted); }
+
+        /* FAQ */
+        .faq-container { max-width: 800px; margin: 0 auto; }
+        .faq-item { background: var(--bg-card); border: 1px solid var(--bg-card-hover); border-radius: 12px; margin-bottom: 1rem; overflow: hidden; transition: all 0.3s ease; }
+        .faq-item:hover { border-color: var(--accent-cyan); }
+        .faq-question { padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 600; font-size: 1.05rem; }
+        .faq-question i { color: var(--accent-cyan); transition: transform 0.3s ease; }
+        .faq-item.active .faq-question i { transform: rotate(180deg); }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; padding: 0 1.5rem; }
+        .faq-item.active .faq-answer { max-height: 300px; padding: 0 1.5rem 1.5rem; }
+        .faq-answer p { color: var(--text-secondary); line-height: 1.7; }
+
+        /* CTA & Footer */
+        .cta-section { background: var(--bg-secondary); text-align: center; padding: 6rem 2rem; position: relative; overflow: hidden; }
+        .cta-section::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(0, 210, 255, 0.1) 0%, transparent 70%); border-radius: 50%; }
+        .cta-content { position: relative; z-index: 1; }
+        
+        footer { background: var(--bg-secondary); border-top: 1px solid var(--bg-card-hover); padding: 3rem 2rem 1.5rem; }
+        .footer-container { max-width: 1400px; margin: 0 auto; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+        .footer-brand p { color: var(--text-secondary); margin-top: 1rem; max-width: 300px; }
+        .footer-social { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .footer-social a { width: 40px; height: 40px; background: var(--bg-card); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); text-decoration: none; transition: all 0.3s ease; }
+        .footer-social a:hover { background: var(--accent-cyan); color: var(--bg-primary); transform: translateY(-3px); }
+        .footer-links ul { list-style: none; }
+        .footer-links li { margin-bottom: 0.75rem; }
+        .footer-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.3s ease; }
+        .footer-links a:hover { color: var(--accent-cyan); }
+        .footer-bottom { border-top: 1px solid var(--bg-card-hover); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; color: var(--text-muted); font-size: 0.85rem; }
+        .footer-disclaimer { background: rgba(255, 23, 68, 0.05); border: 1px solid rgba(255, 23, 68, 0.2); border-radius: 8px; padding: 1rem; margin-top: 1.5rem; font-size: 0.8rem; color: var(--text-secondary); text-align: center; }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .hero-container { grid-template-columns: 1fr; text-align: center; }
+            .hero-stats { justify-content: center; }
+            .hero-cta { justify-content: center; }
+            .hero-visual { order: -1; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .pricing-card.featured { transform: none; }
+            .pricing-card.featured:hover { transform: translateY(-5px); }
+        }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero { padding: 6rem 1rem 3rem; }
+            section { padding: 4rem 1rem; }
+            .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .footer-bottom { flex-direction: column; text-align: center; }
+            .dashboard-content { grid-template-columns: 1fr; }
+        }
+
+        /* Animations on scroll */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <div class="logo-icon"><i class="fas fa-shield-alt"></i></div>
+                Super<span>Bot</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#strategies">Strategies</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#testimonials">Reviews</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="https://t.me/superbotcoummintysupport_bot?start=start" target="_blank" class="btn btn-primary">Get Started</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge"><i class="fas fa-circle"></i> v4.1.0 — Self-Healing Edition</div>
+                <h1>The Ultimate <span class="highlight">AI Trading Bot</span> for MetaTrader 5</h1>
+                <p class="hero-subtitle">Trade Crypto 24/7, Forex, Gold & Indices with 33 professional strategies. Self-healing, auto-save, and zero maintenance required.</p>
+                
+                <div class="hero-stats">
+                    <div class="hero-stat"><div class="hero-stat-value">33</div><div class="hero-stat-label">Strategies</div></div>
+                    <div class="hero-stat"><div class="hero-stat-value">24/7</div><div class="hero-stat-label">Crypto Trading</div></div>
+                    <div class="hero-stat"><div class="hero-stat-value">16+</div><div class="hero-stat-label">Symbols</div></div>
+                </div>
+                
+                <div class="hero-cta">
+                    <a href="#pricing" class="btn btn-primary btn-large"><i class="fas fa-rocket"></i> Get Started</a>
+                    <a href="#features" class="btn btn-secondary btn-large"><i class="fas fa-play-circle"></i> Watch Demo</a>
+                </div>
+            </div>
+            
+            <div class="hero-visual">
+                <div class="dashboard-preview">
+                    <div class="dashboard-dots"><span></span><span></span><span></span></div>
+                    <div class="dashboard-content">
+                        <div class="dash-card"><div class="dash-card-label">Balance</div><div class="dash-card-value green">$420.21</div></div>
+                        <div class="dash-card"><div class="dash-card-label">Today P&L</div><div class="dash-card-value green">+$127.50</div></div>
+                        <div class="dash-card"><div class="dash-card-label">Win Rate</div><div class="dash-card-value cyan">78.5%</div></div>
+                        <div class="dash-card"><div class="dash-card-label">Open Trades</div><div class="dash-card-value orange">3</div></div>
+                        <div class="dash-card"><div class="dash-card-label">Session</div><div class="dash-card-value green">Crypto 24/7</div></div>
+                        <div class="dash-card"><div class="dash-card-label">Status</div><div class="dash-card-value green">● AUTO ON</div></div>
+                    </div>
+                    <div class="floating-badge top-right"><i class="fas fa-check-circle"></i> Live Trading</div>
+                    <div class="floating-badge bottom-left"><i class="fas fa-bolt"></i> 0.3s Execution</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features">
+        <div class="section-container">
+            <div class="section-header reveal">
+                <div class="section-tag">Powerful Features</div>
+                <h2 class="section-title">Everything You Need to Trade Smarter</h2>
+                <p class="section-subtitle">Built for both beginners and professional traders. No coding required.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card reveal">
+                    <div class="feature-icon"><i class="fab fa-bitcoin"></i></div>
+                    <h3>Crypto 24/7 Trading</h3>
+                    <p>Trade Bitcoin, Ethereum, and 8+ cryptocurrencies around the clock, including weekends when Forex is closed.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-icon"><i class="fas fa-brain"></i></div>
+                    <h3>Self-Healing System</h3>
+                    <p>Automatic error recovery, MT5 reconnection, and queue management. The bot fixes itself when issues arise.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-icon"><i class="fas fa-save"></i></div>
+                    <h3>Auto-Save Settings</h3>
+                    <p>Every click is automatically saved. Your symbols, risk mode, and preferences persist across sessions.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>33 Pro Strategies</h3>
+                    <p>From candlestick patterns to SMC, Ichimoku, and RSI divergence. Multiple confirmations before every trade.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3>Advanced Risk Management</h3>
+                    <p>Adaptive risk, trailing stops, partial take-profits, daily loss limits, and global drawdown protection.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-icon"><i class="fab fa-telegram"></i></div>
+                    <h3>Telegram Alerts</h3>
+                    <p>Get instant notifications on your phone for every trade open, close, profit, or loss. Never miss a move.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-icon"><i class="fas fa-newspaper"></i></div>
+                    <h3>News Filter</h3>
+                    <p>Automatically pauses trading during high-impact economic events to protect your capital from volatility.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-icon"><i class="fas fa-moon"></i></div>
+                    <h3>Dark Professional UI</h3>
+                    <p>Beautiful, modern dashboard with live charts, equity curves, concept leaderboard, and detailed logs.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                    <h3>Lightning Fast Execution</h3>
+                    <p>Sub-second trade execution with smart slippage protection and multi-retry logic for reliability.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Strategies Section -->
+    <section id="strategies" class="strategies-section">
+        <div class="section-container">
+            <div class="section-header reveal">
+                <div class="section-tag">Strategy Arsenal</div>
+                <h2 class="section-title">33 Professional Trading Strategies</h2>
+                <p class="section-subtitle">A complete toolkit covering every market condition and trading style.</p>
+            </div>
+            <div class="strategies-grid">
+                <div class="strategy-item reveal"><div class="strategy-icon"><i class="fas fa-check"></i></div><div><div class="strategy-name">Bullish/Bearish Engulfing</div><div class="strategy-category">Candlestick</div></div></div>
+                <div class="strategy-item reveal"><div class="strategy-icon"><i class="fas fa-check"></i></div><div><div class="strategy-name">Pin Bar Rejection</div><div class="strategy-category">Candlestick</div></div></div>
+                <div class="strategy-item reveal"><div class="strategy-icon"><i class="fas fa-check"></i></div><div><div class="strategy-name">Morning/Evening Star</div><div class="strategy-category">Candlestick</div></div></div>
+                <div class="strategy-item reveal"><div class="strategy-icon"><i class="fas fa-check"></i></div><div><div class="strategy-name">Three Soldiers/Crows</div><div class="strategy-category">Candlestick</div></div></div>
+                <div class="strategy-item reveal"><div class="strategy-icon"><i class="fas fa-check"></i></div><div><div class="strategy-name">Double Top/Bottom</div><div class="strategy-category">Chart Pattern</div></div></div>
+                <div class="strategy-item reveal"><div class="strategy-icon"><i class="fas fa-check"></i></div><div><div class="strategy-name">Head & Shoulders</div><div class="strategy-category">Chart Pattern</div></div></div>
+                <div class="strategy-item reveal"><div class="strategy-icon"><i class="fas fa-check"></i></div><div><div class="strategy-name">EMA Stack & Cross</div><div class="strategy-category">Trend</div></div></div>
+                <div class="strategy-item reveal"><div class="strategy-icon"><i class="fas fa-check"></i></div><div><div class="strategy-name">Ichimoku Cloud</div><div class="strategy-category">Trend</div></div></div>
+                <div class="strategy-item reveal"><div class="strategy-icon"><i class="fas fa-check"></i></div><div><div class="strategy-name">ADX Trend Strength</div><div class="strategy-category">Trend</div></div></div>
+                <div class="strategy-item reveal"><div class="strategy-icon"><i class="fas fa-check"></i></div><div><div class="strategy-name">MACD Crossover</div><div class="strategy-category">Momentum</div></div></div>
+                <div class="strategy-item reveal"><div class="strategy-icon"><i class="fas fa-check"></i></div><div><div class="strategy-name">RSI Divergence</div><div class="strategy-category">Momentum</div></div></div>
+                <div class="strategy-item reveal"><div class="strategy-icon"><i class="fas fa-check"></i></div><div><div class="strategy-name">Stochastic Oscillator</div><div class="strategy-category">Momentum</div></div></div>
+                <div class="strategy-item reveal"><div class="strategy-icon"><i class="fas fa-check"></i></div><div><div class="strategy-name">Bollinger Bands</div><div class="strategy-category">Volatility</div></div></div>
+                <div class="strategy-item reveal"><div class="strategy-icon"><i class="fas fa-check"></i></div><div><div class="strategy-name">Break of Structure</div><div class="strategy-category">Smart Money</div></div></div>
+                <div class="strategy-item reveal"><div class="strategy-icon"><i class="fas fa-check"></i></div><div><div class="strategy-name">Fair Value Gap</div><div class="strategy-category">Smart Money</div></div></div>
+                <div class="strategy-item reveal"><div class="strategy-icon"><i class="fas fa-check"></i></div><div><div class="strategy-name">Order Blocks</div><div class="strategy-category">Smart Money</div></div></div>
+                <div class="strategy-item reveal"><div class="strategy-icon"><i class="fas fa-check"></i></div><div><div class="strategy-name">Liquidity Sweep</div><div class="strategy-category">Smart Money</div></div></div>
+                <div class="strategy-item reveal"><div class="strategy-icon"><i class="fas fa-check"></i></div><div><div class="strategy-name">Fibonacci Levels</div><div class="strategy-category">Levels</div></div></div>
+                <div class="strategy-item reveal"><div class="strategy-icon"><i class="fas fa-check"></i></div><div><div class="strategy-name">PDH / PDL Sweep</div><div class="strategy-category">Levels</div></div></div>
+                <div class="strategy-item reveal"><div class="strategy-icon"><i class="fas fa-check"></i></div><div><div class="strategy-name">Support/Resistance</div><div class="strategy-category">Levels</div></div></div>
+                <div class="strategy-item reveal"><div class="strategy-icon"><i class="fas fa-check"></i></div><div><div class="strategy-name">Volume Spike</div><div class="strategy-category">Volume</div></div></div>
+                <div class="strategy-item reveal"><div class="strategy-icon"><i class="fas fa-check"></i></div><div><div class="strategy-name">OBV Divergence</div><div class="strategy-category">Volume</div></div></div>
+                <div class="strategy-item reveal"><div class="strategy-icon"><i class="fas fa-check"></i></div><div><div class="strategy-name">MTF Alignment</div><div class="strategy-category">Multi-Timeframe</div></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing">
+        <div class="section-container">
+            <div class="section-header reveal">
+                <div class="section-tag">Simple Pricing</div>
+                <h2 class="section-title">Choose Your Plan</h2>
+                <p class="section-subtitle">One-time payment. Lifetime updates. No hidden fees.</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card reveal">
+                    <div class="pricing-name">Starter</div>
+                    <div class="pricing-desc">Perfect for beginners</div>
+                    <div class="pricing-price"><span class="pricing-amount">$99</span><span class="pricing-period">one-time</span></div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> All 33 Strategies</li>
+                        <li><i class="fas fa-check"></i> Crypto 24/7 Trading</li>
+                        <li><i class="fas fa-check"></i> 1 Account License</li>
+                        <li><i class="fas fa-check"></i> Auto-Save & Self-Healing</li>
+                        <li><i class="fas fa-check"></i> Email Support</li>
+                        <li><i class="fas fa-times" style="color:var(--text-muted)"></i> Telegram Alerts</li>
+                        <li><i class="fas fa-times" style="color:var(--text-muted)"></i> Priority Updates</li>
+                    </ul>
+                    <button onclick="createInvoice('starter', 99)" class="btn btn-secondary pricing-btn">Pay via Telegram (USDT)</button>
+                </div>
+
+                <div class="pricing-card featured reveal">
+                    <div class="pricing-name">Professional</div>
+                    <div class="pricing-desc">Most popular choice</div>
+                    <div class="pricing-price"><span class="pricing-amount">$199</span><span class="pricing-period">one-time</span></div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> All 33 Strategies</li>
+                        <li><i class="fas fa-check"></i> Crypto 24/7 Trading</li>
+                        <li><i class="fas fa-check"></i> 3 Account Licenses</li>
+                        <li><i class="fas fa-check"></i> Auto-Save & Self-Healing</li>
+                        <li><i class="fas fa-check"></i> Telegram Alerts</li>
+                        <li><i class="fas fa-check"></i> Sound Alerts</li>
+                        <li><i class="fas fa-check"></i> Priority Support</li>
+                    </ul>
+                    <button onclick="createInvoice('professional', 199)" class="btn btn-primary pricing-btn">Pay via Telegram (USDT)</button>
+                </div>
+
+                <div class="pricing-card reveal">
+                    <div class="pricing-name">Enterprise</div>
+                    <div class="pricing-desc">For serious traders</div>
+                    <div class="pricing-price"><span class="pricing-amount">$399</span><span class="pricing-period">one-time</span></div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> All 33 Strategies</li>
+                        <li><i class="fas fa-check"></i> Crypto 24/7 Trading</li>
+                        <li><i class="fas fa-check"></i> Unlimited Licenses</li>
+                        <li><i class="fas fa-check"></i> Auto-Save & Self-Healing</li>
+                        <li><i class="fas fa-check"></i> Telegram + Sound Alerts</li>
+                        <li><i class="fas fa-check"></i> Lifetime Updates</li>
+                        <li><i class="fas fa-check"></i> 1-on-1 Setup Call</li>
+                    </ul>
+                    <button onclick="createInvoice('enterprise', 399)" class="btn btn-secondary pricing-btn">Pay via Telegram (USDT)</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="strategies-section">
+        <div class="section-container">
+            <div class="section-header reveal">
+                <div class="section-tag">Testimonials</div>
+                <h2 class="section-title">Loved by Traders Worldwide</h2>
+                <p class="section-subtitle">Join thousands of successful traders using SuperBot daily.</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card reveal">
+                    <div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="testimonial-text">"The Crypto 24/7 feature is a game-changer. I'm making profits even on weekends while other traders are waiting for Monday. The self-healing system saved me multiple times."</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">AK</div>
+                        <div><div class="testimonial-name">Arjun Kumar</div><div class="testimonial-role">Crypto Trader, India</div></div>
+                    </div>
+                </div>
+                <div class="testimonial-card reveal">
+                    <div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="testimonial-text">"I've tried dozens of trading bots. SuperBot is the only one that actually works reliably. The 33 strategies give me confidence, and the UI is absolutely beautiful."</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">MS</div>
+                        <div><div class="testimonial-name">Michael Schmidt</div><div class="testimonial-role">Forex Trader, Germany</div></div>
+                    </div>
+                </div>
+                <div class="testimonial-card reveal">
+                    <div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="testimonial-text">"The Telegram alerts are perfect. I get notified instantly on my phone whenever a trade opens or closes. The risk management features protected my account during volatile markets."</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">SR</div>
+                        <div><div class="testimonial-name">Sarah Rodriguez</div><div class="testimonial-role">Gold Trader, USA</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq">
+        <div class="section-container">
+            <div class="section-header reveal">
+                <div class="section-tag">FAQ</div>
+                <h2 class="section-title">Frequently Asked Questions</h2>
+                <p class="section-subtitle">Everything you need to know before getting started.</p>
+            </div>
+            <div class="faq-container">
+                <div class="faq-item reveal">
+                    <div class="faq-question">Do I need coding experience to use SuperBot?<i class="fas fa-chevron-down"></i></div>
+                    <div class="faq-answer"><p>No! SuperBot is designed for everyone. Just install Python, connect your MT5 account, and click AUTO. The bot handles everything automatically.</p></div>
+                </div>
+                <div class="faq-item reveal">
+                    <div class="faq-question">Which brokers are supported?<i class="fas fa-chevron-down"></i></div>
+                    <div class="faq-answer"><p>SuperBot works with any broker that supports MetaTrader 5. Popular choices include Vantage Markets, IC Markets, Pepperstone, and many more.</p></div>
+                </div>
+                <div class="faq-item reveal">
+                    <div class="faq-question">Can I trade on weekends?<i class="fas fa-chevron-down"></i></div>
+                    <div class="faq-answer"><p>Yes! Crypto symbols (BTCUSD, ETHUSD, etc.) trade 24/7 including weekends. Forex, Gold, and Indices follow standard market hours (Monday-Friday).</p></div>
+                </div>
+                <div class="faq-item reveal">
+                    <div class="faq-question">What is the minimum account balance?<i class="fas fa-chevron-down"></i></div>
+                    <div class="faq-answer"><p>We recommend at least $500 for Forex and $200 for Crypto. The bot automatically adjusts lot sizes based on your balance and risk settings.</p></div>
+                </div>
+                <div class="faq-item reveal">
+                    <div class="faq-question">Is there a refund policy?<i class="fas fa-chevron-down"></i></div>
+                    <div class="faq-answer"><p>Yes, we offer a 7-day money-back guarantee. If you're not satisfied with SuperBot, contact us within 7 days for a full refund.</p></div>
+                </div>
+                <div class="faq-item reveal">
+                    <div class="faq-question">Do I get free updates?<i class="fas fa-chevron-down"></i></div>
+                    <div class="faq-answer"><p>Yes! All plans include free lifetime updates. When we release new strategies or features, you'll get them automatically at no extra cost.</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="buy" class="cta-section">
+        <div class="section-container">
+            <div class="cta-content reveal">
+                <h2 class="cta-title">Ready to Start Trading Smarter?</h2>
+                <p class="cta-subtitle">Join thousands of traders who are already profiting with SuperBot. Get your copy today.</p>
+                <div class="hero-cta" style="justify-content: center;">
+                    <a href="https://t.me/superbotcoummintysupport_bot?start=start" target="_blank" class="btn btn-primary btn-large"><i class="fas fa-shopping-cart"></i> Buy SuperBot Now</a>
+                    <a href="https://t.me/superbotcoummintysupport_bot?start=support" target="_blank" class="btn btn-secondary btn-large"><i class="fab fa-telegram"></i> Contact Support</a>
+                </div>
+                <p style="margin-top: 2rem; color: var(--text-muted); font-size: 0.9rem;"><i class="fas fa-shield-alt"></i> 7-Day Money-Back Guarantee · Instant Delivery · Lifetime Updates</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="logo">
+                        <div class="logo-icon"><i class="fas fa-shield-alt"></i></div>
+                        Super<span>Bot</span>
+                    </a>
+                    <p>The most advanced AI-powered trading bot for MetaTrader 5. Trade smarter, not harder.</p>
+                    <div class="footer-social">
+                        <a href="https://t.me/superbotcoummintysupport_bot" target="_blank"><i class="fab fa-telegram"></i></a>
+                        <a href="#"><i class="fab fa-discord"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#strategies">Strategies</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#">Changelog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#faq">FAQ</a></li>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="https://t.me/superbotcoummintysupport_bot?start=support" target="_blank">Contact Us</a></li>
+                        <li><a href="#">Bug Report</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Refund Policy</a></li>
+                        <li><a href="#">Risk Disclosure</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-disclaimer">
+                <strong>Risk Disclaimer:</strong> Trading foreign exchange, cryptocurrencies, and CFDs on margin carries a high level of risk and may not be suitable for all investors. Past performance is not indicative of future results. You could lose some or all of your initial investment. Only trade with money you can afford to lose.
+            </div>
+            <div class="footer-bottom">
+                <div>© 2026 SuperBot Trading Systems. All rights reserved.</div>
+                <div>Made with <i class="fas fa-heart" style="color: var(--accent-red);"></i> for traders worldwide</div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // CONFIGURATION - UPDATE THIS WITH YOUR GAS WEB APP URL
+        const GAS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbx7_28-Vech1zxpjbENd-Il5RT0re0d7Mip4uyIM053E6PVHMLVzJi9BlW_cOuxrCyn/exec";
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        // Reveal animations on scroll
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                const isActive = item.classList.contains('active');
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+                if (!isActive) item.classList.add('active');
+            });
+        });
+
+        // PAYMENT FUNCTION - Creates invoice via Google Apps Script
+        async function createInvoice(plan, amount) {
+            const userId = prompt("Enter your Telegram User ID (get from @userinfobot):");
+            if (!userId || isNaN(userId)) {
+                alert("❌ Please enter a valid Telegram User ID.");
+                return;
+            }
+            
+            const username = prompt("Enter your Telegram Username (without @):") || "Unknown";
+            
+            try {
+                const response = await fetch(GAS_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        type: 'create_invoice',
+                        user_id: parseInt(userId),
+                        username: username,
+                        plan: plan,
+                        amount: amount,
+                        telegram_chat_id: parseInt(userId)
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    const instructions = `📋 ORDER CREATED!\n\n` +
+                                       `Order ID: ${data.order_id}\n` +
+                                       `Amount: ${data.amount} USDT (TRC20)\n\n` +
+                                       `💳 SEND PAYMENT TO:\n${data.wallet_address}\n\n` +
+                                       `⚠️ IMPORTANT:\n` +
+                                       `1. Send EXACTLY ${data.amount} USDT (TRC20)\n` +
+                                       `2. Take screenshot of transaction\n` +
+                                       `3. Send screenshot to @superbotcoummintysupport_bot\n` +
+                                       `4. Include caption: ${data.order_id}\n\n` +
+                                       `${data.instructions}`;
+                    
+                    alert(instructions);
+                    
+                    // Open Telegram bot with pre-filled message
+                    window.open(`https://t.me/superbotcoummintysupport_bot?start=pay_${data.order_id}`, '_blank');
+                } else {
+                    alert("❌ Error creating invoice. Please contact support.");
+                }
+            } catch (error) {
+                console.error(error);
+                alert("❌ Connection error. Please check your internet and try again.");
+            }
+        }
+    </script>
+</body>
+</html>
